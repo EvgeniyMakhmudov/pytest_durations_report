@@ -27,7 +27,7 @@ func ParseStringToRecord(s string) root.Record {
 	var duration float64
 	items := splitLikePython(s, " ")
 	if len(items) != 3 {
-		panic(fmt.Errorf("line of data have %d items,not 3. Line: %s", len(items), s))
+		items = []string{items[0], items[1], strings.Join(items[2:], " ")}
 	}
 
 	// get duration
@@ -52,20 +52,20 @@ func ParseStringToRecord(s string) root.Record {
 	}
 
 	// get full path. Transform string "a/b::c[d]" to "a/b/c/d"
-	path_items := strings.Split(items[2], string(os.PathSeparator))
-	last_path := path_items[len(path_items)-1]
-
-	last_path_items := strings.Split(last_path, "::")
-	path_items[len(path_items)-1] = last_path_items[0]
-
-	if index := strings.Index(last_path_items[1], "["); index != -1 {
-		path_items = append(
-			path_items,
-			last_path_items[1][:index],
-			last_path_items[1][index+1:len(last_path_items[1])-1],
-		)
+	var first_path, last_path = "", ""
+	if index := strings.Index(items[2], "["); index != -1 {
+		last_path = strings.ReplaceAll(items[2][index+1:len(items[2])-1], string(os.PathSeparator), "_")
+		first_path = items[2][:index]
 	} else {
-		path_items = append(path_items, last_path_items[1])
+		first_path = items[2]
+	}
+
+	path_items := strings.Split(first_path, string(os.PathSeparator))
+	last_path_items := strings.Split(path_items[len(path_items)-1], "::")
+	path_items[len(path_items)-1] = last_path_items[0]
+	path_items = append(path_items, last_path_items[1])
+	if last_path != "" {
+		path_items = append(path_items, last_path)
 	}
 	full_path := strings.Join(path_items, string(os.PathSeparator))
 

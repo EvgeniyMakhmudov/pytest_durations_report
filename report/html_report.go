@@ -57,8 +57,7 @@ func makeColorBar(a, b, c float64) string {
 	total := a + b + c
 	na := int((a * 100) / total)
 	nb := na + int((b*100)/total)
-	tmpl := "background-image: linear-gradient(to right, red 0%% %d%% , green %d%% %d%%, blue %d%% );"
-	//background-image: linear-gradient(to right, red 0% 25% , green 25% 75%, blue 75% );
+	tmpl := "background-image: linear-gradient(to right, red 0%% %d%% , lime %d%% %d%%, black %d%% );"
 	return fmt.Sprintf(tmpl, na, na, nb, nb)
 }
 
@@ -69,8 +68,14 @@ func makeContent(leaf *root.Leaf, max_title_length int) string {
 	<span style="background-color:#F0FFFF">%s</span>
 	<span style="background-color:#FFF5EE">%s</span>
 	<span style="background-color:#000;color:#FFF;font-weight: bold">%s</span>
-	<div style="display:inline-block;height:5px;width:150px;%s"></div>
+	<div class="tooltip cmd_short" data-tooltip="%s" style="display:inline-block;height:5px;width:150px;%s"></div>
 	`
+
+	na := int((leaf.TimeSetup * 100) / leaf.TimeTotal)
+	nb := int((leaf.TimeCall * 100) / leaf.TimeTotal)
+	nc := 100 - na - nb
+	tooltip := fmt.Sprintf("%d%% %d%% %d%%", na, nb, nc)
+
 	content := fmt.Sprintf(
 		tmp,
 		fillNBSP(leaf.Title, max_title_length, "right"),
@@ -78,6 +83,7 @@ func makeContent(leaf *root.Leaf, max_title_length int) string {
 		formatFloatToContentString(leaf.TimeCall),
 		formatFloatToContentString(leaf.TimeTearDown),
 		formatFloatToContentString(leaf.TimeTotal),
+		tooltip,
 		makeColorBar(leaf.TimeSetup, leaf.TimeCall, leaf.TimeTearDown),
 	)
 	return content
@@ -96,7 +102,7 @@ func buildLines(leaf *root.Leaf, max_title_length int) []string {
 				max_title_length = len(v.Title)
 			}
 		}
-		slices.SortFunc(leafs, root.LeafSortFunc)
+		slices.SortFunc(leafs, root.LeafSortReverseFunc)
 		result = append(result, "<li>", "<div class=\"drop dropM\">-</div>", content, "<ul>")
 
 		for _, leaf := range leafs {

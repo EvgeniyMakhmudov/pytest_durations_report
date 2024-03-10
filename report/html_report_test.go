@@ -7,8 +7,8 @@ func TestMakeColorBar(t *testing.T) {
 		a, b, c float64
 		want    string
 	}{
-		{1, 2, 1, "background-image: linear-gradient(to right, red 0% 25% , green 25% 75%, blue 75% );"},
-		{4, 5, 1, "background-image: linear-gradient(to right, red 0% 40% , green 40% 90%, blue 90% );"},
+		{1, 2, 1, "background-image: linear-gradient(to right, red 0% 25% , lime 25% 75%, black 75% );"},
+		{4, 5, 1, "background-image: linear-gradient(to right, red 0% 40% , lime 40% 90%, black 90% );"},
 	}
 
 	for _, c := range cases {

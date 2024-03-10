@@ -99,3 +99,15 @@ func LeafSortFunc(l1, l2 *Leaf) int {
 		}
 	}
 }
+
+func LeafSortReverseFunc(l1, l2 *Leaf) int {
+	if l1.TimeTotal > l2.TimeTotal {
+		return -1
+	} else {
+		if l1.TimeTotal < l2.TimeTotal {
+			return 1
+		} else {
+			return 0
+		}
+	}
+}

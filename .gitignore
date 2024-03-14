@@ -24,3 +24,6 @@ go.work
 # Project customs
 pytest_durations_html_report_*.html
 *.log
+
+# build app
+pytest_durations_report

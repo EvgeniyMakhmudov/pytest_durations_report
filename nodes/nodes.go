@@ -1,23 +1,23 @@
-package root
+package nodes
 
 import (
 	"fmt"
 	"strings"
 )
 
-func NewLeaf(title string, parent *Leaf) Leaf {
-	leaf := Leaf{}
-	leaf.Parent = parent
-	leaf.Title = title
-	leaf.Childs = make(map[string]*Leaf)
-	return leaf
+func NewTreeNode(title string, parent *TreeNode) TreeNode {
+	tree_node := TreeNode{}
+	tree_node.Parent = parent
+	tree_node.Title = title
+	tree_node.Childs = make(map[string]*TreeNode)
+	return tree_node
 }
 
-type Leaf struct {
+type TreeNode struct {
 	Title        string
 	FullPath     string
-	Parent       *Leaf
-	Childs       map[string]*Leaf
+	Parent       *TreeNode
+	Childs       map[string]*TreeNode
 	TimeTotal    float64
 	TimeSetup    float64
 	TimeCall     float64
@@ -30,17 +30,17 @@ type Record struct {
 	Value    float64
 }
 
-func AddRecordInRoot(root *Leaf, record Record) {
-	var parent, child *Leaf
+func AddRecordInnodes(nodes *TreeNode, record Record) {
+	var parent, child *TreeNode
 	var ok bool
-	parent = root
+	parent = nodes
 	path_items := strings.Split(record.FullPath, "/")
 
 	for _, path_item := range path_items {
 		child, ok = parent.Childs[path_item]
 		if !ok {
-			leaf := NewLeaf(path_item, parent)
-			child = &leaf
+			tree_node := NewTreeNode(path_item, parent)
+			child = &tree_node
 			parent.Childs[path_item] = child
 		}
 		parent = child
@@ -67,9 +67,9 @@ type values struct {
 	TimeTearDown float64
 }
 
-func CalcChildsValues(root *Leaf) values {
+func CalcChildsValues(nodes *TreeNode) values {
 	var setup, call, teardown float64
-	for _, child := range root.Childs {
+	for _, child := range nodes.Childs {
 		if len(child.Childs) == 0 {
 			setup += child.TimeSetup
 			call += child.TimeCall
@@ -81,14 +81,14 @@ func CalcChildsValues(root *Leaf) values {
 			teardown += values.TimeTearDown
 		}
 	}
-	root.TimeSetup = setup
-	root.TimeCall = call
-	root.TimeTearDown = teardown
-	root.TimeTotal = setup + call + teardown
+	nodes.TimeSetup = setup
+	nodes.TimeCall = call
+	nodes.TimeTearDown = teardown
+	nodes.TimeTotal = setup + call + teardown
 	return values{setup, call, teardown}
 }
 
-func LeafSortFunc(l1, l2 *Leaf) int {
+func TreeNodeSortFunc(l1, l2 *TreeNode) int {
 	if l1.TimeTotal > l2.TimeTotal {
 		return 1
 	} else {
@@ -100,7 +100,7 @@ func LeafSortFunc(l1, l2 *Leaf) int {
 	}
 }
 
-func LeafSortReverseFunc(l1, l2 *Leaf) int {
+func TreeNodeSortReverseFunc(l1, l2 *TreeNode) int {
 	if l1.TimeTotal > l2.TimeTotal {
 		return -1
 	} else {

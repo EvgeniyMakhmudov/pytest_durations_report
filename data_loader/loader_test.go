@@ -1,14 +1,14 @@
 package data_loader
 
 import (
-	"pytest_durations_report/root"
+	"pytest_durations_report/nodes"
 	"reflect"
 	"testing"
 )
 
 func TestParseStringToRecord1(t *testing.T) {
 	line := "2.84s setup    my_project/package_a/test_values.py::test_value1"
-	want := root.Record{
+	want := nodes.Record{
 		FullPath: "my_project/package_a/test_values.py/test_value1",
 		ItemName: "setup",
 		Value:    2.84,
@@ -23,7 +23,7 @@ func TestParseStringToRecord1(t *testing.T) {
 
 func TestParseStringToRecord2(t *testing.T) {
 	line := "1.5m call   my_project/package_a/test_values.py::test_value2[parametrize_values]"
-	want := root.Record{
+	want := nodes.Record{
 		FullPath: "my_project/package_a/test_values.py/test_value2/parametrize_values",
 		ItemName: "call",
 		Value:    90,
@@ -38,7 +38,7 @@ func TestParseStringToRecord2(t *testing.T) {
 
 func TestParseStringToRecord3(t *testing.T) {
 	line := "1.5m call   my_project/package_a/test_values.py::test_value2[parametrize_values/some_value]"
-	want := root.Record{
+	want := nodes.Record{
 		FullPath: "my_project/package_a/test_values.py/test_value2/parametrize_values_some_value",
 		ItemName: "call",
 		Value:    90,
@@ -53,7 +53,7 @@ func TestParseStringToRecord3(t *testing.T) {
 
 func TestParseStringToRecord4(t *testing.T) {
 	line := "1.5m call   my_project/package_a/test_values.py::test_value2[parametrize_values and some_value]"
-	want := root.Record{
+	want := nodes.Record{
 		FullPath: "my_project/package_a/test_values.py/test_value2/parametrize_values and some_value",
 		ItemName: "call",
 		Value:    90,

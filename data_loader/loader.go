@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"pytest_durations_report/root"
+	"pytest_durations_report/nodes"
 	"strings"
 )
 
@@ -23,7 +23,7 @@ func splitLikePython(s string, sep string) []string {
 	return result
 }
 
-func ParseStringToRecord(s string) root.Record {
+func ParseStringToRecord(s string) nodes.Record {
 	var duration float64
 	items := splitLikePython(s, " ")
 	if len(items) != 3 {
@@ -69,19 +69,19 @@ func ParseStringToRecord(s string) root.Record {
 	}
 	full_path := strings.Join(path_items, string(os.PathSeparator))
 
-	return root.Record{FullPath: full_path, ItemName: items[1], Value: duration}
+	return nodes.Record{FullPath: full_path, ItemName: items[1], Value: duration}
 
 }
 
-func LoadFromStdout() root.Leaf {
-	root_obj := root.NewLeaf("ROOT", nil)
+func LoadFromStdout() nodes.TreeNode {
+	nodes_obj := nodes.NewTreeNode("nodes", nil)
 	// TODO: implement this
-	return root_obj
+	return nodes_obj
 }
 
-func LoadFromFile(filename string) root.Leaf {
+func LoadFromFile(filename string) nodes.TreeNode {
 	var data_was_start bool
-	root_obj := root.NewLeaf("ROOT", nil)
+	nodes_obj := nodes.NewTreeNode("nodes", nil)
 
 	file, err := os.Open(filename)
 	if err != nil {
@@ -107,12 +107,12 @@ func LoadFromFile(filename string) root.Leaf {
 		}
 
 		record := ParseStringToRecord(line)
-		root.AddRecordInRoot(&root_obj, record)
+		nodes.AddRecordInnodes(&nodes_obj, record)
 	}
 
 	if err := scanner.Err(); err != nil {
 		panic(err)
 	}
 
-	return root_obj
+	return nodes_obj
 }

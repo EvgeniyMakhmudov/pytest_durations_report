@@ -3,7 +3,7 @@ package report
 import (
 	"fmt"
 	"os"
-	"pytest_durations_report/root"
+	"pytest_durations_report/nodes"
 	"slices"
 	"strings"
 	"text/template"
@@ -12,7 +12,7 @@ import (
 
 const CELLWIDTH = 8
 
-func CreateHtmlReport(leaf *root.Leaf) {
+func CreateHtmlReport(tree_node *nodes.TreeNode) {
 	dt := time.Now()
 	data := make(map[string]string)
 
@@ -22,9 +22,9 @@ func CreateHtmlReport(leaf *root.Leaf) {
 		panic(error)
 	}
 
-	// TODO: get title from first leaf title, based by cmd of launch pytest
+	// TODO: get title from first tree_node title, based by cmd of launch pytest
 	data["title"] = fmt.Sprintf("Pytest durations report %s.html", dt.Format("2000-01-01 12:00:00"))
-	data["tree_body"] = strings.Join(buildLines(leaf, len(leaf.Title)), "\n")
+	data["tree_body"] = strings.Join(buildLines(tree_node, len(tree_node.Title)), "\n")
 
 	tmpl, error := template.New("template.html").ParseFiles("report/template.html")
 	if error != nil {
@@ -61,7 +61,7 @@ func makeColorBar(a, b, c float64) string {
 	return fmt.Sprintf(tmpl, na, na, nb, nb)
 }
 
-func makeContent(leaf *root.Leaf, max_title_length int) string {
+func makeContent(tree_node *nodes.TreeNode, max_title_length int) string {
 
 	tmp := `<span>%s</span>
 	<span style="background-color:#FFF5EE">%s</span>
@@ -71,42 +71,42 @@ func makeContent(leaf *root.Leaf, max_title_length int) string {
 	<div class="tooltip cmd_short" data-tooltip="%s" style="display:inline-block;height:5px;width:150px;%s"></div>
 	`
 
-	na := int((leaf.TimeSetup * 100) / leaf.TimeTotal)
-	nb := int((leaf.TimeCall * 100) / leaf.TimeTotal)
+	na := int((tree_node.TimeSetup * 100) / tree_node.TimeTotal)
+	nb := int((tree_node.TimeCall * 100) / tree_node.TimeTotal)
 	nc := 100 - na - nb
 	tooltip := fmt.Sprintf("%d%% %d%% %d%%", na, nb, nc)
 
 	content := fmt.Sprintf(
 		tmp,
-		fillNBSP(leaf.Title, max_title_length, "right"),
-		formatFloatToContentString(leaf.TimeSetup),
-		formatFloatToContentString(leaf.TimeCall),
-		formatFloatToContentString(leaf.TimeTearDown),
-		formatFloatToContentString(leaf.TimeTotal),
+		fillNBSP(tree_node.Title, max_title_length, "right"),
+		formatFloatToContentString(tree_node.TimeSetup),
+		formatFloatToContentString(tree_node.TimeCall),
+		formatFloatToContentString(tree_node.TimeTearDown),
+		formatFloatToContentString(tree_node.TimeTotal),
 		tooltip,
-		makeColorBar(leaf.TimeSetup, leaf.TimeCall, leaf.TimeTearDown),
+		makeColorBar(tree_node.TimeSetup, tree_node.TimeCall, tree_node.TimeTearDown),
 	)
 	return content
 }
 
-func buildLines(leaf *root.Leaf, max_title_length int) []string {
+func buildLines(tree_node *nodes.TreeNode, max_title_length int) []string {
 	result := make([]string, 0)
-	content := makeContent(leaf, max_title_length)
+	content := makeContent(tree_node, max_title_length)
 
-	if len(leaf.Childs) != 0 {
-		leafs := make([]*root.Leaf, 0, len(leaf.Childs))
+	if len(tree_node.Childs) != 0 {
+		tree_nodes := make([]*nodes.TreeNode, 0, len(tree_node.Childs))
 		max_title_length := 0
-		for _, v := range leaf.Childs {
-			leafs = append(leafs, v)
+		for _, v := range tree_node.Childs {
+			tree_nodes = append(tree_nodes, v)
 			if len(v.Title) > max_title_length {
 				max_title_length = len(v.Title)
 			}
 		}
-		slices.SortFunc(leafs, root.LeafSortReverseFunc)
+		slices.SortFunc(tree_nodes, nodes.TreeNodeSortReverseFunc)
 		result = append(result, "<li>", "<div class=\"drop dropM\">-</div>", content, "<ul>")
 
-		for _, leaf := range leafs {
-			lines := buildLines(leaf, max_title_length)
+		for _, tree_node := range tree_nodes {
+			lines := buildLines(tree_node, max_title_length)
 			result = append(result, lines...)
 		}
 

@@ -1,7 +1,7 @@
 package report
 
 import (
-	"pytest_durations_report/root"
+	"pytest_durations_report/nodes"
 	"strings"
 	"testing"
 )
@@ -63,12 +63,12 @@ func TestFillNBSP(t *testing.T) {
 }
 
 func TestBuildLines(t *testing.T) {
-	top := root.NewLeaf("ROOT", nil)
+	top := nodes.NewTreeNode("nodes", nil)
 	top.TimeTotal = 10.5
 	top.TimeSetup = 1.0
 	top.TimeCall = 9.5
 
-	child := root.NewLeaf("Child", &top)
+	child := nodes.NewTreeNode("Child", &top)
 	top.TimeTotal = 10.5
 	top.TimeSetup = 1.0
 	top.TimeCall = 9.5

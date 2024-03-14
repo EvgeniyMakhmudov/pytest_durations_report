@@ -102,7 +102,7 @@ func LoadFromFile(filename string) root.Leaf {
 		}
 
 		// end data block, stop reading
-		if data_was_start && line == "" {
+		if data_was_start && (line == "" || (strings.HasPrefix(line, "=") && strings.HasSuffix(line, "="))) {
 			break
 		}
 

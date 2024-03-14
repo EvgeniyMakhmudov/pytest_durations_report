@@ -1,6 +1,10 @@
 package report
 
-import "testing"
+import (
+	"pytest_durations_report/root"
+	"strings"
+	"testing"
+)
 
 func TestMakeColorBar(t *testing.T) {
 	cases := []struct {
@@ -56,4 +60,29 @@ func TestFillNBSP(t *testing.T) {
 			t.Errorf("Failed result %q, want %q", result, c.want)
 		}
 	}
+}
+
+func TestBuildLines(t *testing.T) {
+	top := root.NewLeaf("ROOT", nil)
+	top.TimeTotal = 10.5
+	top.TimeSetup = 1.0
+	top.TimeCall = 9.5
+
+	child := root.NewLeaf("Child", &top)
+	top.TimeTotal = 10.5
+	top.TimeSetup = 1.0
+	top.TimeCall = 9.5
+	top.Childs["Child"] = &child
+
+	lines := buildLines(&top, 4)
+	if lines[0] != "<li>" {
+		t.Errorf("Failed check first string: %q, want %q", lines[0], "<li>")
+	}
+	if !strings.Contains(lines[1], "drop dropM") {
+		t.Errorf("Failed check second string: %q, must contain %q", lines[1], "drop dropM")
+	}
+	if lines[len(lines)-1] != "</li>" {
+		t.Errorf("Failed check last string: %q, want %q", lines[len(lines)-1], "</li>")
+	}
+
 }

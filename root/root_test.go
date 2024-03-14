@@ -2,6 +2,7 @@ package root
 
 import (
 	"math"
+	"slices"
 	"testing"
 )
 
@@ -58,5 +59,53 @@ func TestCalcChildsValues(t *testing.T) {
 
 	if _f := root.Childs["l1"].TimeTotal; math.Round(_f*1000)/1000 != 131.7 {
 		t.Errorf("test1 total = %x, want %x\n", _f, 131.7)
+	}
+}
+
+func TestLeafSortFunc(t *testing.T) {
+	l3 := NewLeaf("3", nil)
+	l1 := NewLeaf("1", nil)
+	l4 := NewLeaf("4", nil)
+	l2 := NewLeaf("2", nil)
+
+	leafs := []*Leaf{&l3, &l1, &l4, &l2}
+	leafs[0].TimeTotal = 3
+	leafs[1].TimeTotal = 1
+	leafs[2].TimeTotal = 4
+	leafs[3].TimeTotal = 2
+
+	slices.SortFunc(leafs, LeafSortFunc)
+	order := make([]string, len(leafs))
+	for index, leaf := range leafs {
+		order[index] = leaf.Title
+	}
+
+	want := []string{"1", "2", "3", "4"}
+	if !slices.Equal(order, want) {
+		t.Errorf("order = %q, want %q\n", order, want)
+	}
+}
+
+func TestLeafSortReverseFunc(t *testing.T) {
+	l3 := NewLeaf("3", nil)
+	l1 := NewLeaf("1", nil)
+	l4 := NewLeaf("4", nil)
+	l2 := NewLeaf("2", nil)
+
+	leafs := []*Leaf{&l3, &l1, &l4, &l2}
+	leafs[0].TimeTotal = 3
+	leafs[1].TimeTotal = 1
+	leafs[2].TimeTotal = 4
+	leafs[3].TimeTotal = 2
+
+	slices.SortFunc(leafs, LeafSortReverseFunc)
+	order := make([]string, len(leafs))
+	for index, leaf := range leafs {
+		order[index] = leaf.Title
+	}
+
+	want := []string{"4", "3", "2", "1"}
+	if !slices.Equal(order, want) {
+		t.Errorf("order = %q, want %q\n", order, want)
 	}
 }

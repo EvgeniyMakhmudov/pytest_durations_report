@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+// func work as Pythons string method split()
+// it ignore empty string in result
 func splitLikePython(s string, sep string) []string {
 	result := make([]string, 0)
 	items := strings.Split(s, sep)
@@ -106,7 +108,7 @@ func Load(scanner *bufio.Scanner) nodes.TreeNode {
 		}
 
 		record := ParseStringToRecord(line)
-		nodes.AddRecordInnodes(&nodes_obj, record)
+		nodes.AddRecordInTreeNode(&nodes_obj, record)
 	}
 
 	if err := scanner.Err(); err != nil {

@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestAddRecordInnodes(t *testing.T) {
+func TestAddRecordInTreeNode(t *testing.T) {
 	nodes := NewTreeNode("nodes", nil)
 
 	records := []Record{
@@ -16,7 +16,7 @@ func TestAddRecordInnodes(t *testing.T) {
 		{"l1/test2", "teardown", 0.3},
 	}
 	for _, record := range records {
-		AddRecordInnodes(&nodes, record)
+		AddRecordInTreeNode(&nodes, record)
 	}
 
 	if _f := nodes.Childs["l1"].Childs["l2"].Childs["test1"].TimeTotal; math.Round(_f*1000)/1000 != 0.3 {
@@ -44,7 +44,7 @@ func TestCalcChildsValues(t *testing.T) {
 		{"l1/l3/test3", "call", 110.1},
 	}
 	for _, record := range records {
-		AddRecordInnodes(&nodes, record)
+		AddRecordInTreeNode(&nodes, record)
 	}
 
 	CalcChildsValues(&nodes)

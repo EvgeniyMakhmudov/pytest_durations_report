@@ -41,6 +41,7 @@ func formatFloatToContentString(f float64) string {
 	return fillNBSP(fs, CELLWIDTH, "left")
 }
 
+// Populate input string by HTML's symbol &nbsp by target width and direction of filling
 func fillNBSP(s string, width int, direction string) string {
 	if l := (width - len(s)); l > 0 {
 		if direction == "left" {
@@ -53,6 +54,7 @@ func fillNBSP(s string, width int, direction string) string {
 	}
 }
 
+// Make CSS style for color bar element by values
 func makeColorBar(a, b, c float64) string {
 	total := a + b + c
 	na := int((a * 100) / total)
@@ -62,7 +64,6 @@ func makeColorBar(a, b, c float64) string {
 }
 
 func makeContent(tree_node *nodes.TreeNode, max_title_length int) string {
-
 	tmp := `<span>%s</span>
 	<span style="background-color:#FFF5EE">%s</span>
 	<span style="background-color:#F0FFFF">%s</span>

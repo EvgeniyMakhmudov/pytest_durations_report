@@ -8,10 +8,6 @@ import (
 	"strings"
 )
 
-func Load(stream bufio.Reader) {
-
-}
-
 func splitLikePython(s string, sep string) []string {
 	result := make([]string, 0)
 	items := strings.Split(s, sep)
@@ -74,15 +70,11 @@ func ParseStringToRecord(s string) nodes.Record {
 }
 
 func LoadFromStdout() nodes.TreeNode {
-	nodes_obj := nodes.NewTreeNode("nodes", nil)
-	// TODO: implement this
-	return nodes_obj
+	scanner := bufio.NewScanner(os.Stdin)
+	return Load(scanner)
 }
 
 func LoadFromFile(filename string) nodes.TreeNode {
-	var data_was_start bool
-	nodes_obj := nodes.NewTreeNode("nodes", nil)
-
 	file, err := os.Open(filename)
 	if err != nil {
 		panic(err)
@@ -91,6 +83,13 @@ func LoadFromFile(filename string) nodes.TreeNode {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
+	return Load(scanner)
+}
+
+func Load(scanner *bufio.Scanner) nodes.TreeNode {
+	var data_was_start bool
+	nodes_obj := nodes.NewTreeNode("nodes", nil)
+
 	for scanner.Scan() {
 		line := scanner.Text()
 

@@ -46,4 +46,5 @@ Report
 
 The result of executing the utility is one HTML file. Each node represents a level of the Python project hierarchy.
 For example using report of testing [YADM project](https://github.com/ticketscloud/yadm), see screenshot.
+<img width="917" alt="Pytest durations report on YADM project" src="https://github.com/EvgeniyMakhmudov/pytest_durations_report/assets/3597681/448bca3a-8c77-4497-8966-031311af70c1">
 The "test_embedded_2.py" node of has a test setup phase of 0.09 seconds, a test execution phase of 0.05 seconds, and a cleanup phase of 0.02 seconds. The total execution time for the package tests is 0.160 seconds. The color bar signifies the distribution of these times: red, green, black in respectively.

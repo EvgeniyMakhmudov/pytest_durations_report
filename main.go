@@ -9,8 +9,10 @@ import (
 	"pytest_durations_report/report"
 )
 
+const VERSION = "1.0"
+
 func main() {
-	var tree_node nodes.TreeNode
+	var version = flag.Bool("version", false, "print version")
 
 	flag.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n", os.Args[0])
@@ -20,7 +22,14 @@ func main() {
 	}
 
 	flag.Parse()
+	if *version {
+		fmt.Printf("Version: %s\n", VERSION)
+		os.Exit(0)
+	}
+
 	filename := flag.Arg(0)
+
+	var tree_node nodes.TreeNode
 
 	if filename != "" {
 		tree_node = data_loader.LoadFromFile(filename)

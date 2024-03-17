@@ -23,7 +23,7 @@ func CreateHtmlReport(tree_node *nodes.TreeNode) {
 	}
 
 	// TODO: get title from first tree_node title, based by cmd of launch pytest
-	data["title"] = fmt.Sprintf("Pytest durations report %s.html", dt.Format("2000-01-01 12:00:00"))
+	data["title"] = fmt.Sprintf("Pytest durations report %4d%02d%02d_%02d%02d%02d.html", dt.Year(), dt.Month(), dt.Day(), dt.Hour(), dt.Minute(), dt.Second())
 	data["tree_body"] = strings.Join(buildLines(tree_node, len(tree_node.Title)), "\n")
 
 	tmpl, error := template.New("template.html").ParseFiles("report/template.html")

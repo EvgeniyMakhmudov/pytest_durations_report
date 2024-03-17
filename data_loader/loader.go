@@ -90,7 +90,7 @@ func LoadFromFile(filename string) nodes.TreeNode {
 
 func Load(scanner *bufio.Scanner) nodes.TreeNode {
 	var data_was_start bool
-	nodes_obj := nodes.NewTreeNode("nodes", nil)
+	nodes_obj := nodes.NewTreeNode("ROOT", nil)
 
 	for scanner.Scan() {
 		line := scanner.Text()

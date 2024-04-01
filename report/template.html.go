@@ -1,3 +1,6 @@
+package report
+
+const TEMPLATEHTML = `
 <!doctype html>
 
 <html lang="en">
@@ -150,4 +153,4 @@ if(k&&j[k]&&(e||j[k].data)||void 0!==d||"string"!=typeof b)return k||(k=i?a[h]=c
 
 </body>
 
-</html>
+</html>`

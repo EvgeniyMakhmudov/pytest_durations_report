@@ -26,7 +26,7 @@ func CreateHtmlReport(tree_node *nodes.TreeNode) {
 	data["title"] = fmt.Sprintf("Pytest durations report %4d%02d%02d_%02d%02d%02d.html", dt.Year(), dt.Month(), dt.Day(), dt.Hour(), dt.Minute(), dt.Second())
 	data["tree_body"] = strings.Join(buildLines(tree_node, len(tree_node.Title)), "\n")
 
-	tmpl, error := template.New("template.html").ParseFiles("report/template.html")
+	tmpl, error := template.New("template.html").Parse(TEMPLATEHTML)
 	if error != nil {
 		panic(error)
 	}

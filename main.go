@@ -9,7 +9,7 @@ import (
 	"pytest_durations_report/report"
 )
 
-const VERSION = "1.0"
+const VERSION = "1.1"
 
 func main() {
 	var version = flag.Bool("version", false, "print version")
